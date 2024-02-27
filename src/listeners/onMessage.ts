@@ -113,52 +113,49 @@ async function dealRoomApexBot(msg: Message, room: Room) {
   const mentionList = await msg.mentionList();
   console.warn("contact");
   console.warn("mention", mentionList);
-  if (mentionList.length === 1 && mentionList[0].id === BotId) {
-    console.warn("进来判断了，艾特的只有一个且是机器人");
-    console.warn(content);
-    const type = content.includes("查询地图")
-      ? 1
-      : content.includes("查询猎杀底分")
-      ? 2
-      : content.includes("查询玩家id")
-      ? 3
-      : content.includes("查询玩家uid")
-      ? 4
-      : content.includes("查询玩家")
-      ? 5
-      : content.includes("查询") || content.includes("帮助")
-      ? 6
-      : 7;
-    let reply = "";
-    switch (type) {
-      case 1:
-        reply = await apbot.queryMap();
-        break;
-      case 2:
-        reply = await apbot.queryPredator();
-        break;
-      case 3:
-        const player = content.split(" ")[1] || "";
-        reply = await apbot.queryUidByName(player);
-        break;
-      case 4:
-        const uid = content.split(" ")[1] || "";
-        reply = await apbot.queryPlayerByUID(uid);
-        break;
-      case 5:
-        const name = content.split(" ")[1] || "";
-        reply = await apbot.queryPlayerByName(name);
-        break;
-      case 6:
-        reply =
-          "查询功能1.0\n1.查询地图\n2.查询猎杀低分\n3.查询玩家id 玩家名称\n4.查询玩家uid 玩家uid\n5查询玩家 玩家名称\n6.帮助";
-        break;
-      default:
-        break;
-    }
-    if (!reply) return;
-    await room.say(`\n${reply}`, contact);
+
+  const type = content.includes("查询地图")
+    ? 1
+    : content.includes("查询猎杀底分")
+    ? 2
+    : content.includes("查询玩家id")
+    ? 3
+    : content.includes("查询玩家uid")
+    ? 4
+    : content.includes("查询玩家")
+    ? 5
+    : content.includes("查询") || content.includes("帮助")
+    ? 6
+    : 7;
+  let reply = "";
+  switch (type) {
+    case 1:
+      reply = await apbot.queryMap();
+      break;
+    case 2:
+      reply = await apbot.queryPredator();
+      break;
+    case 3:
+      const player = content.split(" ")[1] || "";
+      reply = await apbot.queryUidByName(player);
+      break;
+    case 4:
+      const uid = content.split(" ")[1] || "";
+      reply = await apbot.queryPlayerByUID(uid);
+      break;
+    case 5:
+      const name = content.split(" ")[1] || "";
+      reply = await apbot.queryPlayerByName(name);
+      break;
+    case 6:
+      reply =
+        "查询功能1.0\n1.查询地图\n2.查询猎杀低分\n3.查询玩家id 玩家名称\n4.查询玩家uid 玩家uid\n5查询玩家 玩家名称\n6.帮助";
+      break;
+    default:
+      break;
   }
+  if (!reply) return;
+  await room.say(`\n${reply}`, contact);
 }
 
 async function dealPersonApexBot(msg: Message) {
