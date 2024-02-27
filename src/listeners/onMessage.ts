@@ -1,11 +1,7 @@
 import { log } from "wechaty";
 import type { Message, Room } from "wechaty";
-import {
-  MapRotationInRoom,
-  getPredatorRoom,
-  queryPlayerByNameInRoom,
-} from "./../services/goApexStatus.ts";
 import ApexBot from "../utils/apexBot.ts";
+
 const BotId =
   "@d02733af693acb84b9f8f6cbb8f6e4847dda028a9f99576d201a627e3ddf256e";
 const startTime = new Date();
@@ -154,14 +150,24 @@ async function dealRoomApexBot(msg: Message, room: Room) {
         reply = await apbot.queryPlayerByName(name);
         break;
       case 6:
-        reply = `查询功能1.0\n1.查询地图\n2.查询猎杀低分\n3.查询玩家id 玩家名称\n4.查询玩家uid 玩家uid\n5查询玩家 玩家名称\n6.帮助`;
+        reply =
+          "查询功能1.0\n1.查询地图\n2.查询猎杀低分\n3.查询玩家id 玩家名称\n4.查询玩家uid 玩家uid\n5查询玩家 玩家名称\n6.帮助";
         break;
       default:
         break;
     }
     if (!reply) return;
-    await room.say("\n" + reply, contact);
+    await room.say(`\n${reply}`, contact);
   }
+}
+
+async function dealPersonApexBot(msg: Message) {
+  const content = msg.text().trim();
+  const contact = msg.talker();
+  let reply = "";
+  if (content.includes("查询地图")) reply = await apbot.queryMap();
+
+  await contact.say(reply);
 }
 /**
  * 好友文本消息
@@ -174,6 +180,7 @@ async function dispatchFriendTextMsg(msg: Message) {
 
   const name = alias ? `${contact.name()}(${alias})` : contact.name();
   log.info(`好友【${name}】：${content}`);
+  await dealPersonApexBot(msg);
 }
 
 async function dispatchRoomAudioMsg(msg: Message, room: Room) {
