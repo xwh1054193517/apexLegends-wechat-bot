@@ -9,12 +9,10 @@ export async function sendContactMsg(bot: Wechaty, content: string, alias?: stri
     query = { name }
 
   try {
-
     const contact = await bot.Contact.find(query)
 
     if (contact)
       contact.say(content)
-
   }
   catch (error) {
     log.error('发送联系人信息错误')

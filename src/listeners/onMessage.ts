@@ -1,9 +1,6 @@
-import { fileURLToPath } from 'node:url'
-import path from 'node:path'
-import fs from 'node:fs'
 import { log } from 'wechaty'
 import type { Message, Room } from 'wechaty'
-import { MapRotationInRoom, queryPlayerByNameInRoom } from './../services/goApexStatus.ts'
+import { MapRotationInRoom, getPredatorRoom, queryPlayerByNameInRoom } from './../services/goApexStatus.ts'
 
 const startTime = new Date()
 export async function onMessage(msg: Message) {
@@ -13,7 +10,6 @@ export async function onMessage(msg: Message) {
 
   const room = msg.room()
   if (room) {
-    const topic = await room.topic()
     // 群白名单，只接受白名单内的群消息
     // if (!robotConfig.whiteRoomList.includes(topic))
     //   return
@@ -109,6 +105,8 @@ async function dispatchRoomTextMsg(msg: Message, room: Room) {
   }
   if (content.includes('查询地图'))
     await MapRotationInRoom(room)
+  if (content.includes('查询猎杀底分'))
+    await getPredatorRoom(room)
 }
 
 /**
