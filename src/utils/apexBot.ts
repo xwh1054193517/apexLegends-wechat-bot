@@ -129,17 +129,17 @@ class ApexBot {
       const { current: currentRk, next: nextRk } = ranked
       const content = `当前匹配地图:${
         mapCnName[currentBr.map]
-      }\n地图持续时间:${formatTime(currentBr.start)} - ${formatTime(
+      }\n地图持续时间:\n${formatTime(currentBr.start)} - ${formatTime(
         currentBr.end,
-      )}\n即将轮换地图:${mapCnName[nextBr.map]}\n地图持续时间:${formatTime(
+      )}\n即将轮换地图:${mapCnName[nextBr.map]}\n地图持续时间:\n${formatTime(
         nextBr.start,
       )} - ${formatTime(nextBr.end)}\n\n当前排位地图:${
         mapCnName[currentRk.map]
-      }\n地图持续时间:地图持续时间:${formatTime(
+      }\n地图持续时间:\n${formatTime(
         currentRk.start,
       )} - ${formatTime(currentRk.end)}\n明日排位地图:${
         mapCnName[nextRk.map]
-      }\n地图持续时间:地图持续时间:${formatTime(nextRk.start)} - ${formatTime(
+      }\n地图持续时间:\n${formatTime(nextRk.start)} - ${formatTime(
         nextRk.end,
       )}`
       console.warn(content)
