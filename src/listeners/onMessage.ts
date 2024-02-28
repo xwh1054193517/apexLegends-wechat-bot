@@ -113,7 +113,8 @@ async function dealRoomApexBot(msg: Message, room: Room) {
   const content = msg.text().trim()
   const contact = msg.talker()
   const mentionList = await msg.mentionList()
-  console.warn('contact')
+  console.warn('room', room)
+  console.warn('contact', contact)
   console.warn('mention', mentionList)
 
   const type = content.includes('查询地图')
