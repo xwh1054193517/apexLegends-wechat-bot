@@ -1,73 +1,75 @@
-import { log } from "wechaty";
-import type { Message, Room } from "wechaty";
-import ApexBot from "../utils/apexBot.ts";
+import { log } from 'wechaty'
+import type { Message, Room } from 'wechaty'
+import ApexBot from '../utils/apexBot.ts'
 
-const BotId =
-  "@d02733af693acb84b9f8f6cbb8f6e4847dda028a9f99576d201a627e3ddf256e";
-const startTime = new Date();
-const apbot = new ApexBot();
+const BotId
+  = '@d02733af693acb84b9f8f6cbb8f6e4847dda028a9f99576d201a627e3ddf256e'
+const startTime = new Date()
+const apbot = new ApexBot()
 export async function onMessage(msg: Message) {
   // 屏蔽接收历史消息
-  if (msg.date() < startTime) return;
+  if (msg.date() < startTime)
+    return
 
-  const room = msg.room();
+  const room = msg.room()
   if (room) {
     // 群白名单，只接受白名单内的群消息
     // if (!robotConfig.whiteRoomList.includes(topic))
     //   return
 
     // 群消息
-    getMessagePayload(msg, room);
-  } else {
-    const bot = msg.wechaty;
-    const contact = msg.talker();
-    if (contact.type() === bot.Contact.Type.Official || contact.id === "weixin")
-      return;
+    getMessagePayload(msg, room)
+  }
+  else {
+    const bot = msg.wechaty
+    const contact = msg.talker()
+    if (contact.type() === bot.Contact.Type.Official || contact.id === 'weixin')
+      return
 
     // 私聊信息
-    getMessagePayload(msg);
+    getMessagePayload(msg)
   }
 }
 
 function getMessagePayload(msg: Message, room?: Room) {
-  const bot = msg.wechaty;
+  const bot = msg.wechaty
   switch (msg.type()) {
     case bot.Message.Type.Text: {
-      room ? dispatchRoomTextMsg(msg, room) : dispatchFriendTextMsg(msg);
-      break;
+      room ? dispatchRoomTextMsg(msg, room) : dispatchFriendTextMsg(msg)
+      break
     }
     case bot.Message.Type.Attachment:
     case bot.Message.Type.Audio: {
-      room ? dispatchRoomAudioMsg(msg, room) : dispatchFriendAudioMsg(msg);
-      break;
+      room ? dispatchRoomAudioMsg(msg, room) : dispatchFriendAudioMsg(msg)
+      break
     }
     case bot.Message.Type.Video: {
-      room ? dispatchRoomVideoMsg(msg, room) : dispatchFriendVideoMsg(msg);
-      break;
+      room ? dispatchRoomVideoMsg(msg, room) : dispatchFriendVideoMsg(msg)
+      break
     }
     case bot.Message.Type.Emoticon: {
       room
         ? dispatchRoomEmoticonMsg(msg, room)
-        : dispatchFriendEmoticonMsg(msg);
-      break;
+        : dispatchFriendEmoticonMsg(msg)
+      break
     }
     case bot.Message.Type.Image: {
-      room ? dispatchRoomImageMsg(msg, room) : dispatchFriendImageMsg(msg);
-      break;
+      room ? dispatchRoomImageMsg(msg, room) : dispatchFriendImageMsg(msg)
+      break
     }
     case bot.Message.Type.Url: {
-      room ? dispatchRoomUrlMsg(msg, room) : dispatchFriendUrlMsg(msg);
-      break;
+      room ? dispatchRoomUrlMsg(msg, room) : dispatchFriendUrlMsg(msg)
+      break
     }
     case bot.Message.Type.MiniProgram: {
       room
         ? dispatchRoomMiniProgramMsg(msg, room)
-        : dispatchFriendMiniProgramMsg(msg);
-      break;
+        : dispatchFriendMiniProgramMsg(msg)
+      break
     }
     default:
-      log.info("接收到莫名其妙的消息");
-      break;
+      log.info('接收到莫名其妙的消息')
+      break
   }
 }
 
@@ -96,97 +98,99 @@ async function downloadMedia(msg: Message) {
  * @param room
  */
 async function dispatchRoomTextMsg(msg: Message, room: Room) {
-  const topic = await room.topic();
-  const content = msg.text().trim();
-  const contact = msg.talker();
-  const mentionList = await msg.mentionList();
-  const alias = await contact.alias();
+  const topic = await room.topic()
+  const content = msg.text().trim()
+  const contact = msg.talker()
+  const mentionList = await msg.mentionList()
+  const alias = await contact.alias()
 
-  const name = alias ? `${contact.name()}(${alias})` : contact.name();
-  log.info(`群【${topic}】【${name}】：${content}`);
-  await dealRoomApexBot(msg, room);
+  const name = alias ? `${contact.name()}(${alias})` : contact.name()
+  log.info(`群【${topic}】【${name}】：${content}`)
+  await dealRoomApexBot(msg, room)
 }
 
 async function dealRoomApexBot(msg: Message, room: Room) {
-  const content = msg.text().trim();
-  const contact = msg.talker();
-  const mentionList = await msg.mentionList();
-  console.warn("contact");
-  console.warn("mention", mentionList);
+  const content = msg.text().trim()
+  const contact = msg.talker()
+  const mentionList = await msg.mentionList()
+  console.warn('contact')
+  console.warn('mention', mentionList)
 
-  const type = content.includes("查询地图")
+  const type = content.includes('查询地图')
     ? 1
-    : content.includes("查询猎杀底分")
-    ? 2
-    : content.includes("查询玩家id")
-    ? 3
-    : content.includes("查询玩家uid")
-    ? 4
-    : content.includes("查询玩家")
-    ? 5
-    : content.includes("查询") || content.includes("帮助")
-    ? 6
-    : 7;
-  let reply = "";
+    : content.includes('查询猎杀底分')
+      ? 2
+      : content.includes('获取玩家uid')
+        ? 3
+        : content.includes('查询玩家uid')
+          ? 4
+          : content.includes('查询玩家')
+            ? 5
+            : content.includes('帮助')
+              ? 6
+              : 7
+  let reply = ''
   switch (type) {
     case 1:
-      reply = await apbot.queryMap();
-      break;
+      reply = await apbot.queryMap()
+      break
     case 2:
-      reply = await apbot.queryPredator();
-      break;
+      reply = await apbot.queryPredator()
+      break
     case 3:
-      const player = content.split(" ")[1] || "";
-      reply = await apbot.queryUidByName(player);
-      break;
+      const player = content.split(' ')[1] || ''
+      reply = await apbot.queryUidByName(player)
+      break
     case 4:
-      const uid = content.split(" ")[1] || "";
-      reply = await apbot.queryPlayerByUID(uid);
-      break;
+      const uid = content.split(' ')[1] || ''
+      reply = await apbot.queryPlayerByUID(uid)
+      break
     case 5:
-      const name = content.split(" ")[1] || "";
-      reply = await apbot.queryPlayerByName(name);
-      break;
+      const name = content.split(' ')[1] || ''
+      reply = await apbot.queryPlayerByName(name)
+      break
     case 6:
-      reply =
-        "查询功能1.0\n1.查询地图\n2.查询猎杀低分\n3.查询玩家id 玩家名称\n4.查询玩家uid 玩家uid\n5查询玩家 玩家名称\n6.帮助";
-      break;
+      reply
+        = 'ApexBox查询功能1.0\n1.查询地图\n2.查询猎杀底分\n3.获取玩家uid 玩家名称\n4.查询玩家uid 玩家uid\n5查询玩家 玩家名称\n6.帮助'
+      break
     default:
-      break;
+      break
   }
-  if (!reply) return;
-  await room.say(`\n${reply}`, contact);
+  if (!reply)
+    return
+  await room.say(`\n${reply}`, contact)
 }
 
 async function dealPersonApexBot(msg: Message) {
-  const content = msg.text().trim();
-  const contact = msg.talker();
-  let reply = "";
-  if (content.includes("查询地图")) reply = await apbot.queryMap();
+  const content = msg.text().trim()
+  const contact = msg.talker()
+  let reply = ''
+  if (content.includes('查询地图'))
+    reply = await apbot.queryMap()
 
-  await contact.say(reply);
+  await contact.say(reply)
 }
 /**
  * 好友文本消息
  * @param msg
  */
 async function dispatchFriendTextMsg(msg: Message) {
-  const content = msg.text().trim();
-  const contact = msg.talker();
-  const alias = await contact.alias();
+  const content = msg.text().trim()
+  const contact = msg.talker()
+  const alias = await contact.alias()
 
-  const name = alias ? `${contact.name()}(${alias})` : contact.name();
-  log.info(`好友【${name}】：${content}`);
-  await dealPersonApexBot(msg);
+  const name = alias ? `${contact.name()}(${alias})` : contact.name()
+  log.info(`好友【${name}】：${content}`)
+  await dealPersonApexBot(msg)
 }
 
 async function dispatchRoomAudioMsg(msg: Message, room: Room) {
-  const topic = await room.topic();
-  const contact = msg.talker();
-  const alias = await contact.alias();
+  const topic = await room.topic()
+  const contact = msg.talker()
+  const alias = await contact.alias()
 
-  const name = alias ? `${contact.name()}(${alias})` : contact.name();
-  log.info(`群【${topic}】【${name}】 发送了文件`);
+  const name = alias ? `${contact.name()}(${alias})` : contact.name()
+  log.info(`群【${topic}】【${name}】 发送了文件`)
 }
 
 async function dispatchFriendAudioMsg(msg: Message) {
@@ -225,84 +229,84 @@ async function dispatchFriendAudioMsg(msg: Message) {
 }
 
 async function dispatchRoomVideoMsg(msg: Message, room: Room) {
-  const topic = await room.topic();
-  const contact = msg.talker();
-  const alias = await contact.alias();
-  downloadMedia(msg);
-  const name = alias ? `${contact.name()}(${alias})` : contact.name();
-  log.info(`群【${topic}】【${name}】 发送了视频文件`);
+  const topic = await room.topic()
+  const contact = msg.talker()
+  const alias = await contact.alias()
+  downloadMedia(msg)
+  const name = alias ? `${contact.name()}(${alias})` : contact.name()
+  log.info(`群【${topic}】【${name}】 发送了视频文件`)
 }
 
 async function dispatchFriendVideoMsg(msg: Message) {
-  const contact = msg.talker();
-  const alias = await contact.alias();
-  downloadMedia(msg);
-  const name = alias ? `${contact.name()}(${alias})` : contact.name();
-  log.info(`好友【${name}】 发送了视频文件`);
+  const contact = msg.talker()
+  const alias = await contact.alias()
+  downloadMedia(msg)
+  const name = alias ? `${contact.name()}(${alias})` : contact.name()
+  log.info(`好友【${name}】 发送了视频文件`)
 }
 
 async function dispatchRoomEmoticonMsg(msg: Message, room: Room) {
-  const topic = await room.topic();
-  const contact = msg.talker();
-  const alias = await contact.alias();
-  const name = alias ? `${contact.name()}(${alias})` : contact.name();
-  downloadMedia(msg);
-  log.info(`群【${topic}】【${name}】 发送了表情符号`);
+  const topic = await room.topic()
+  const contact = msg.talker()
+  const alias = await contact.alias()
+  const name = alias ? `${contact.name()}(${alias})` : contact.name()
+  downloadMedia(msg)
+  log.info(`群【${topic}】【${name}】 发送了表情符号`)
 }
 
 async function dispatchFriendEmoticonMsg(msg: Message) {
-  const contact = msg.talker();
-  const alias = await contact.alias();
-  downloadMedia(msg);
-  const name = alias ? `${contact.name()}(${alias})` : contact.name();
-  log.info(`好友【${name}】 发送了表情符号`);
+  const contact = msg.talker()
+  const alias = await contact.alias()
+  downloadMedia(msg)
+  const name = alias ? `${contact.name()}(${alias})` : contact.name()
+  log.info(`好友【${name}】 发送了表情符号`)
 }
 
 async function dispatchRoomImageMsg(msg: Message, room: Room) {
-  const topic = await room.topic();
-  const contact = msg.talker();
-  const alias = await contact.alias();
-  const name = alias ? `${contact.name()}(${alias})` : contact.name();
-  downloadMedia(msg);
-  log.info(`群【${topic}】【${name}】 发送了图片`);
+  const topic = await room.topic()
+  const contact = msg.talker()
+  const alias = await contact.alias()
+  const name = alias ? `${contact.name()}(${alias})` : contact.name()
+  downloadMedia(msg)
+  log.info(`群【${topic}】【${name}】 发送了图片`)
 }
 
 async function dispatchFriendImageMsg(msg: Message) {
-  const contact = msg.talker();
-  const alias = await contact.alias();
-  downloadMedia(msg);
-  const name = alias ? `${contact.name()}(${alias})` : contact.name();
-  log.info(`好友【${name}】 发送了图片`);
+  const contact = msg.talker()
+  const alias = await contact.alias()
+  downloadMedia(msg)
+  const name = alias ? `${contact.name()}(${alias})` : contact.name()
+  log.info(`好友【${name}】 发送了图片`)
 }
 
 async function dispatchRoomUrlMsg(msg: Message, room: Room) {
-  const topic = await room.topic();
-  const contact = msg.talker();
-  const alias = await contact.alias();
-  const name = alias ? `${contact.name()}(${alias})` : contact.name();
-  log.info(`群【${topic}】【${name}】 发送了链接`);
+  const topic = await room.topic()
+  const contact = msg.talker()
+  const alias = await contact.alias()
+  const name = alias ? `${contact.name()}(${alias})` : contact.name()
+  log.info(`群【${topic}】【${name}】 发送了链接`)
 }
 
 async function dispatchFriendUrlMsg(msg: Message) {
-  const contact = msg.talker();
-  const alias = await contact.alias();
+  const contact = msg.talker()
+  const alias = await contact.alias()
 
-  const name = alias ? `${contact.name()}(${alias})` : contact.name();
-  log.info(`好友【${name}】 发送了链接`);
+  const name = alias ? `${contact.name()}(${alias})` : contact.name()
+  log.info(`好友【${name}】 发送了链接`)
 }
 
 async function dispatchRoomMiniProgramMsg(msg: Message, room: Room) {
-  const topic = await room.topic();
-  const contact = msg.talker();
-  const alias = await contact.alias();
-  const name = alias ? `${contact.name()}(${alias})` : contact.name();
-  log.info(`群【${topic}】【${name}】 发送了小程序`);
+  const topic = await room.topic()
+  const contact = msg.talker()
+  const alias = await contact.alias()
+  const name = alias ? `${contact.name()}(${alias})` : contact.name()
+  log.info(`群【${topic}】【${name}】 发送了小程序`)
 }
 
 async function dispatchFriendMiniProgramMsg(msg: Message) {
-  const contact = msg.talker();
-  const alias = await contact.alias();
+  const contact = msg.talker()
+  const alias = await contact.alias()
 
-  const name = alias ? `${contact.name()}(${alias})` : contact.name();
-  log.info(`好友【${name}】 发送了小程序`);
+  const name = alias ? `${contact.name()}(${alias})` : contact.name()
+  log.info(`好友【${name}】 发送了小程序`)
 }
