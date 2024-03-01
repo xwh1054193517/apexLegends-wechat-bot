@@ -161,9 +161,9 @@ async function dealRoomApexBot(msg: Message, room: Room) {
           reply = '输入格式不对 请输入帮助查看指令'
         }
         else {
-          const content = content.slice(spaceIdx)
+          const askContent = content.slice(spaceIdx)
           console.warn(spaceIdx)
-          console.warn('传给AI的内容', content)
+          console.warn('传给AI的内容', askContent)
           // reply = await sendAiMsg(content) as any
         }
 
