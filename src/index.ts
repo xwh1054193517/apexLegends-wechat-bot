@@ -1,5 +1,5 @@
 import express from 'express'
-import { WechatyBuilder } from 'wechaty'
+import { WechatyBuilder,log } from 'wechaty'
 import { onLogin } from './listeners/onLogin.ts'
 import { onLogout } from './listeners/onLogout.ts'
 import { onMessage } from './listeners/onMessage.ts'
@@ -27,10 +27,10 @@ bot
   .on('logout', onLogout)
   .on('message', onMessage)
 
-// bot
-//   .start()
-//   .then(() => log.info('开始运行...'))
-//   .catch(e => log.error('StarterBot', e))
+bot
+  .start()
+  .then(() => log.info('开始运行...'))
+  .catch(e => log.error('StarterBot', e))
 
 app.get('/0', async (req, res) => {
   if (req.query.name || req.query.alias) {

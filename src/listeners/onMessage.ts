@@ -1,6 +1,7 @@
 import { log } from 'wechaty'
 import type { Message, Room } from 'wechaty'
 import ApexBot from '../utils/apexBot.ts'
+import { sendAiMsg } from '../utils/xunfeiTools.ts'
 
 const startTime = new Date()
 const apbot = new ApexBot()
@@ -106,7 +107,6 @@ async function dispatchRoomTextMsg(msg: Message, room: Room) {
   const content = msg.text().trim()
   const contact = msg.talker()
   const alias = await contact.alias()
-
   const name = alias ? `${contact.name()}(${alias})` : contact.name()
   log.info(`群【${topic}】【${name}】：${content}`)
   await dealRoomApexBot(msg, room)
@@ -116,6 +116,7 @@ async function dealRoomApexBot(msg: Message, room: Room) {
   const content = msg.text().trim()
   const contact = msg.talker()
   const isAt = await msg.mentionSelf()
+  
   if (isAt) {
     console.warn('进来判断了，艾特的只有一个且是机器人')
     const type = content.includes('查询地图')
@@ -156,15 +157,13 @@ async function dealRoomApexBot(msg: Message, room: Room) {
           = '机器人帮助指南:使用前需要@机器人\n指令菜单：帮助\n\nApex查询功能1.0\n1.查询地图\n2.查询猎杀低分\n3.查询玩家id 玩家名称\n4.查询玩家uid 玩家uid\n5查询玩家 玩家名称\n\n 本机器人已接入讯飞认知模型\n 聊天 聊天内容'
         break
       case 7:
-        const spaceIdx = content.findIndex(' ')
+        const spaceIdx = content.indexOf(' ')
         if (spaceIdx === -1) {
           reply = '输入格式不对 请输入帮助查看指令'
         }
         else {
           const askContent = content.slice(spaceIdx)
-          console.warn(spaceIdx)
-          console.warn('传给AI的内容', askContent)
-          // reply = await sendAiMsg(content) as any
+          reply = await sendAiMsg(askContent) as any
         }
 
         break
