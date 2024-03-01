@@ -14,9 +14,11 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^1.6.7",
+    "crypto-js": "^4.2.0",
     "express": "^4.18.2",
     "file-box": "^1.4.15",
     "fluent-ffmpeg": "^2.1.2",
+    "js-base64": "^3.7.7",
     "moment": "^2.30.1",
     "pm2": "^5.3.0",
     "qrcode-terminal": "^0.12.0",
@@ -24,7 +26,8 @@
     "typescript": "^5.1.6",
     "utils-lib": "^0.2.4",
     "wechaty": "^1.20.2",
-    "wechaty-puppet-wechat": "^1.18.4"
+    "wechaty-puppet-wechat": "^1.18.4",
+    "ws": "^8.16.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.40.2",
